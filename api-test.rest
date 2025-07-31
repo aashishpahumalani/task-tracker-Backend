@@ -1,0 +1,289 @@
+### Task Tracker API Testing
+### Base URL
+@baseURL = http://localhost:3001
+@apiURL = {{baseURL}}/api
+
+### Variables for testing
+@taskId = 1
+
+###############################################
+### HEALTH CHECK
+###############################################
+
+### Health Check
+GET {{baseURL}}/health
+Content-Type: application/json
+
+###############################################
+### TASK MANAGEMENT
+###############################################
+
+### 1. Get All Tasks
+GET {{apiURL}}/tasks
+Content-Type: application/json
+
+###
+
+### 2. Create a New Task
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Complete project documentation",
+  "color": "#007bff",
+  "completed": false
+}
+
+###
+
+### 3. Create Another Task (for testing)
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Write unit tests",
+  "color": "#28a745",
+  "completed": false
+}
+
+###
+
+### 4. Create Task with only required field
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Simple task with default values"
+}
+
+###
+
+### 5. Get Task by ID (replace {{taskId}} with actual ID)
+GET {{apiURL}}/tasks/{{taskId}}
+Content-Type: application/json
+
+###
+
+### 6. Update Task (Complete Update)
+PUT {{apiURL}}/tasks/{{taskId}}
+Content-Type: application/json
+
+{
+  "title": "Updated: Complete project documentation",
+  "color": "#dc3545",
+  "completed": true
+}
+
+###
+
+### 7. Update Task (Partial Update - only title)
+PUT {{apiURL}}/tasks/{{taskId}}
+Content-Type: application/json
+
+{
+  "title": "Partially updated task title"
+}
+
+###
+
+### 8. Update Task (Partial Update - only completion status)
+PUT {{apiURL}}/tasks/{{taskId}}
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+###
+
+### 9. Toggle Task Completion Status
+PATCH {{apiURL}}/tasks/{{taskId}}/toggle
+Content-Type: application/json
+
+###
+
+### 10. Delete Task
+DELETE {{apiURL}}/tasks/{{taskId}}
+Content-Type: application/json
+
+###############################################
+### ERROR TESTING
+###############################################
+
+### Test Validation Error - Empty title
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "",
+  "color": "#007bff"
+}
+
+###
+
+### Test Validation Error - Invalid color
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Task with invalid color",
+  "color": "invalid-color"
+}
+
+###
+
+### Test Validation Error - Invalid completed type
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Task with invalid completed value",
+  "completed": "not-boolean"
+}
+
+###
+
+### Test 404 Error - Non-existent task
+GET {{apiURL}}/tasks/99999
+Content-Type: application/json
+
+###
+
+### Test 404 Error - Update non-existent task
+PUT {{apiURL}}/tasks/99999
+Content-Type: application/json
+
+{
+  "title": "This task doesn't exist"
+}
+
+###
+
+### Test 404 Error - Delete non-existent task
+DELETE {{apiURL}}/tasks/99999
+Content-Type: application/json
+
+###
+
+### Test Invalid Route
+GET {{apiURL}}/invalid-route
+Content-Type: application/json
+
+###############################################
+### BULK TESTING SCENARIO
+###############################################
+
+### Create multiple tasks for testing
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Task 1: High Priority",
+  "color": "#dc3545",
+  "completed": false
+}
+
+###
+
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Task 2: Medium Priority",
+  "color": "#ffc107",
+  "completed": false
+}
+
+###
+
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Task 3: Low Priority",
+  "color": "#28a745",
+  "completed": true
+}
+
+###
+
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Task 4: Completed Task",
+  "color": "#6c757d",
+  "completed": true
+}
+
+###
+
+### Get all tasks after creating multiple
+GET {{apiURL}}/tasks
+Content-Type: application/json
+
+###############################################
+### PERFORMANCE TESTING
+###############################################
+
+### Quick succession of requests
+GET {{apiURL}}/tasks
+###
+GET {{apiURL}}/tasks
+###
+GET {{apiURL}}/tasks
+
+###############################################
+### NOTES
+###############################################
+
+###
+### How to use this file:
+### 1. Install the "REST Client" extension in VS Code
+### 2. Make sure your server is running (npm run dev)
+### 3. Click "Send Request" above any ### line
+### 4. Update @taskId variable with actual task IDs from responses
+### 5. The responses will appear in a new tab
+###
+### Tips:
+### - Use Ctrl+Alt+R to send the request under cursor
+### - Use Ctrl+Alt+E to send all requests in file
+### - Variables like {{taskId}} can be updated at the top
+### - Responses are formatted and syntax highlighted
+###
+
+###############################################
+### EXAMPLE WORKFLOW
+###############################################
+
+### Step 1: Check health
+GET {{baseURL}}/health
+
+### Step 2: Get initial tasks (should be empty)
+GET {{apiURL}}/tasks
+
+### Step 3: Create a task
+POST {{apiURL}}/tasks
+Content-Type: application/json
+
+{
+  "title": "My first task",
+  "color": "#007bff"
+}
+
+### Step 4: Get all tasks (should show 1 task)
+GET {{apiURL}}/tasks
+
+### Step 5: Update the task (use ID from step 3 response)
+PUT {{apiURL}}/tasks/1
+Content-Type: application/json
+
+{
+  "completed": true
+}
+
+### Step 6: Toggle completion
+PATCH {{apiURL}}/tasks/1/toggle
+
+### Step 7: Delete the task
+DELETE {{apiURL}}/tasks/1

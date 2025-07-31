@@ -1,0 +1,19 @@
+# Environment variables
+.env
+.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependencies
+node_modules/
+
+# Production builds
+build/
+dist/
+out/
+
+# Prisma
+# Keep schema.prisma and migrations, but ignore generated files
+prisma/generated/
